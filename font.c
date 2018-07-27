@@ -32,7 +32,7 @@
 #define OPENGL_HEIGHT 13
 
 
-char string[] = "--|--";
+char string[] = "";
 GLenum rgb, doubleBuffer, windType;
 float angleX = 0.0, angleY = 0.0, angleZ = 0.0;
 float scaleX = 1.0, scaleY = 1.0, scaleZ = 0.0;
@@ -54,8 +54,17 @@ static void DrawStrokeString(void *font, const char *string)
 {
     int i;
 
-    for (i = 0; string[i]; i++)
-	glutStrokeCharacter(font, string[i]);
+//    for (i = 0; string[i]; i++)
+//	glutStrokeCharacter(font, string[i]);
+
+glPointSize(2.0f);  
+glBegin(GL_POINTS); // Start drawing a point primitive  
+glVertex3f(-1.0f, -1.0f, 0.0f); // The bottom left corner  
+glVertex3f(-1.0f, 1.0f, 0.0f); // The top left corner  
+glVertex3f(1.0f, 1.0f, 0.0f); // The top right corner  
+glVertex3f(1.0f, -1.0f, 0.0f); // The bottom right corner  
+glEnd();  
+
 }
 
 static void Init(void)
