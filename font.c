@@ -28,41 +28,38 @@
 #include "glut_wrap.h"
 
 
-#define OPENGL_WIDTH 24
-#define OPENGL_HEIGHT 13
-
-
 char string[] = "";
 GLenum rgb, doubleBuffer, windType;
 float angleX = 0.0, angleY = 0.0, angleZ = 0.0;
 float scaleX = 1.0, scaleY = 1.0, scaleZ = 0.0;
-float shiftX = 0.0, shiftY = 0.0, shiftZ = -700.0;
+float shiftX = 0.0, shiftY = 0.0, shiftZ = -200.0;
 
+enum {width=400,height=400};
+
+unsigned char img[3 * width * height];
 
 #include "tkmap.c"
 
 
 static void DrawBitmapString(void *font, const char *string)
 {
-    int i;
+    //int i;
 
-    for (i = 0; string[i]; i++)
+    for (int i = 0; string[i]; i++) {
 	glutBitmapCharacter(font, string[i]);
+    }
 }
 
 static void DrawStrokeString(void *font, const char *string)
 {
-    int i;
-
-//    for (i = 0; string[i]; i++)
-//	glutStrokeCharacter(font, string[i]);
 
 glPointSize(2.0f);  
-glBegin(GL_POINTS); // Start drawing a point primitive  
-glVertex3f(-1.0f, -1.0f, 0.0f); // The bottom left corner  
-glVertex3f(-1.0f, 1.0f, 0.0f); // The top left corner  
-glVertex3f(1.0f, 1.0f, 0.0f); // The top right corner  
-glVertex3f(1.0f, -1.0f, 0.0f); // The bottom right corner  
+//glBegin(GL_POINTS); // Start drawing a point primitive  
+glBegin(GL_LINES); // Start drawing a point primitive  
+glVertex3f(-10.0f, -10.0f, 0.0f); // The bottom left corner  
+glVertex3f(-10.0f, 10.0f, 0.0f); // The top left corner  
+glVertex3f(10.0f, 10.0f, 0.0f); // The top right corner  
+glVertex3f(10.0f, -10.0f, 0.0f); // The bottom right corner  
 glEnd();  
 
 }
@@ -83,7 +80,7 @@ static void Reshape(int width, int height)
     glLoadIdentity();
 //    glOrtho(-400.0, 400.0, -200.0, 200.0, -400.0, 400.0);
 //GLdouble left,GLdouble right,GLdouble bottom,GLdouble top,GLdouble near,GLdouble far)
-    glFrustum(-400.0, 400.0, -400.0, 400, 1000, 1);
+    glFrustum( -width/2, width/2, -height/2, height/2, 1000, 1);
     glMatrixMode(GL_MODELVIEW);
 }
 
@@ -176,6 +173,15 @@ static void Key(unsigned char key, int x, int y)
 	    angleY = angleY - 360.0;
 	}
 	break;
+      case 'p':
+	glReadPixels(0, 0, width, height, GL_RGB, GL_UNSIGNED_BYTE, img);
+	printf("print\n");
+        for (int i=0; i < (width*height*3) ;++i) {
+	  if (img[i] != 0 ) {
+	  printf("%i %i %i",img[i] ,img[i+1] ,img[i+2]);
+	  }
+	}
+	break;
       case 'c':
 	angleZ -= 5.0;
 	if (angleZ < 0.0) {
@@ -210,14 +216,8 @@ static void Draw(void)
     glRotatef(angleZ, 0.0, 0.0, 1.0);
     glScalef(scaleX, scaleY, scaleZ);
 
-   /* glPushMatrix();
-    glRasterPos2f(-390.5, 0.5);
-    DrawBitmapString(GLUT_BITMAP_9_BY_15, string);
-    glPopMatrix();
-*/
     glPushMatrix();
-    //glTranslatef(-390.5, 3.5, -300.0);
-    glTranslatef(-200, 0, 200);
+    glTranslatef(0, 0, 0);
     DrawStrokeString(GLUT_STROKE_ROMAN, string);
     glPopMatrix();
 
@@ -262,7 +262,7 @@ int main(int argc, char **argv)
 	exit(1);
     }
 
-    glutInitWindowPosition(0, 0); glutInitWindowSize( 800, 400);
+    glutInitWindowPosition(0, 0); glutInitWindowSize( width, height);
 
     windType = (rgb) ? GLUT_RGB : GLUT_INDEX;
     windType |= (doubleBuffer) ? GLUT_DOUBLE : GLUT_SINGLE;
