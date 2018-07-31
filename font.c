@@ -41,25 +41,34 @@ unsigned char img[3 * width * height];
 #include "tkmap.c"
 
 
-static void DrawBitmapString(void *font, const char *string)
-{
-    //int i;
-
-    for (int i = 0; string[i]; i++) {
-	glutBitmapCharacter(font, string[i]);
-    }
-}
-
 static void DrawStrokeString(void *font, const char *string)
 {
 
 glPointSize(2.0f);  
 //glBegin(GL_POINTS); // Start drawing a point primitive  
 glBegin(GL_LINES); // Start drawing a point primitive  
-glVertex3f(-10.0f, -10.0f, 0.0f); // The bottom left corner  
+/*glVertex3f(-10.0f, -10.0f, 0.0f); // The bottom left corner  
+glVertex3f(-10.0f, 10.0f, 0.0f); // The top left corner  
+
 glVertex3f(-10.0f, 10.0f, 0.0f); // The top left corner  
 glVertex3f(10.0f, 10.0f, 0.0f); // The top right corner  
+
+glVertex3f(-10.0f, -10.0f, 0.0f); // The bottom left corner  
 glVertex3f(10.0f, -10.0f, 0.0f); // The bottom right corner  
+
+glVertex3f(10.0f, 10.0f, 0.0f); // The top right corner  
+glVertex3f(10.0f, -10.0f, 0.0f); // The bottom right corner  
+
+glVertex3f(10.0f, 10.0f, 0.0f); // The top right corner  
+glVertex3f(10.0f, -10.0f, 0.0f); // The bottom right corner  
+*/
+glVertex3f(-10 ,0 ,0);
+glVertex3f( 10 ,0 ,0);
+
+glVertex3f(0 ,-10 ,0);
+glVertex3f(0 ,10 ,0);
+
+
 glEnd();  
 
 }
@@ -216,17 +225,17 @@ static void Draw(void)
     glRotatef(angleZ, 0.0, 0.0, 1.0);
     glScalef(scaleX, scaleY, scaleZ);
 
-    glPushMatrix();
-    glTranslatef(0, 0, 0);
+//    glPushMatrix();
+//    glTranslatef(0, 0, 0);
     DrawStrokeString(GLUT_STROKE_ROMAN, string);
-    glPopMatrix();
+//    glPopMatrix();
 
     glPopMatrix();
 
     glFlush();
 
     if (doubleBuffer) {
-	glutSwapBuffers();
+      glutSwapBuffers();
     }
 }
 
@@ -262,7 +271,7 @@ int main(int argc, char **argv)
 	exit(1);
     }
 
-    glutInitWindowPosition(0, 0); glutInitWindowSize( width, height);
+    glutInitWindowPosition(2000, 0); glutInitWindowSize( width, height);
 
     windType = (rgb) ? GLUT_RGB : GLUT_INDEX;
     windType |= (doubleBuffer) ? GLUT_DOUBLE : GLUT_SINGLE;
